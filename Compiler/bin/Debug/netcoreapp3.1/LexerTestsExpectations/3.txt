@@ -1,0 +1,7 @@
+lN=1	cN=1	lT=integer_literal_int	sC=48	m=48
+lN=2	cN=1	lT=integer_literal_int	sC=9_8	m=98
+lN=3	cN=1	lT=integer_literal_int	sC=67__	m=67
+lN=4	cN=1	lT=integer_literal_int	sC=89	m=89
+lN=5	cN=1	lT=integer_literal_int	sC=7676767	m=7676767
+lN=5	cN=9	lT=integer_literal_int	sC=77	m=77
+lN=5	cN=11	lT=end_of_file	sC=	m=EndOfFile

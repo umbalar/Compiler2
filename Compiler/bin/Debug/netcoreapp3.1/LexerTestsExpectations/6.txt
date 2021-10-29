@@ -1,0 +1,13 @@
+lN=1	cN=1	lT=Operator	sC=+	m=+
+lN=1	cN=3	lT=Operator	sC=-	m=-
+lN=1	cN=5	lT=Operator	sC=++	m=++
+lN=1	cN=8	lT=Operator	sC=+=	m=+=
+lN=2	cN=1	lT=Operator	sC=>=	m=>=
+lN=2	cN=4	lT=Operator	sC=<	m=<
+lN=3	cN=1	lT=Operator	sC=<<=	m=<<=
+lN=4	cN=1	lT=Operator	sC=+	m=+
+lN=5	cN=1	lT=Operator	sC=++	m=++
+lN=5	cN=3	lT=Operator	sC=+	m=+
+lN=6	cN=1	lT=Operator	sC=++	m=++
+lN=6	cN=4	lT=Operator	sC==	m==
+lN=6	cN=4	lT=end_of_file	sC=	m=EndOfFile

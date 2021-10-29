@@ -1,0 +1,4 @@
+lN=1	cN=1	lT=identifier	sC=term	m=IDName
+lN=2	cN=1	lT=identifier	sC=vect23	m=IDName
+lN=3	cN=1	lT=identifier	sC=_ye_ye	m=IDName
+lN=3	cN=7	lT=end_of_file	sC=	m=EndOfFile

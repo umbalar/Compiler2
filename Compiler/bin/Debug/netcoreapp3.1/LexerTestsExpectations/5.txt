@@ -1,0 +1,8 @@
+lN=1	cN=1	lT=delimiter	sC=;	m=;
+lN=1	cN=3	lT=delimiter	sC=(	m=(
+lN=1	cN=4	lT=delimiter	sC={	m={
+lN=1	cN=5	lT=delimiter	sC=}	m=}
+lN=1	cN=6	lT=delimiter	sC=)	m=)
+lN=1	cN=8	lT=delimiter	sC=,	m=,
+lN=1	cN=9	lT=delimiter	sC=.	m=.
+lN=1	cN=11	lT=end_of_file	sC=	m=EndOfFile

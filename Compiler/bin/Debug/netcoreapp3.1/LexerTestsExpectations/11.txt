@@ -1,0 +1,6 @@
+lN=1	cN=1	lT=err	sC=12svf	m=
+lN=2	cN=1	lT=err	sC=1.1f5	m=
+lN=3	cN=2	lT=err	sC=vbg	m=
+lN=4	cN=1	lT=err	sC=''	m=
+lN=5	cN=0	lT=err	sC="dcaas	m=
+lN=5	cN=7	lT=end_of_file	sC=	m=EndOfFile

@@ -1,0 +1,7 @@
+lN=1	cN=1	lT=real_literal_double	sC=0.1	m=0,1
+lN=1	cN=5	lT=real_literal_double	sC=5.9	m=5,9
+lN=2	cN=1	lT=real_literal_double	sC=132.9_87	m=132,987
+lN=3	cN=1	lT=real_literal_double	sC=1_.0d	m=1
+lN=4	cN=1	lT=real_literal_double	sC=99.	m=99
+lN=5	cN=1	lT=real_literal_double	sC=.2	m=0,2
+lN=5	cN=3	lT=end_of_file	sC=	m=EndOfFile

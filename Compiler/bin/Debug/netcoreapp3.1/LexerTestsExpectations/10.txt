@@ -1,0 +1,5 @@
+lN=1	cN=1	lT=key_word	sC=if	m=KWName
+lN=2	cN=1	lT=key_word	sC=int	m=KWName
+lN=3	cN=1	lT=key_word	sC=try	m=KWName
+lN=4	cN=1	lT=key_word	sC=string	m=KWName
+lN=4	cN=7	lT=end_of_file	sC=	m=EndOfFile
