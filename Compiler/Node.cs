@@ -29,7 +29,7 @@ namespace Compiler
             return token.meaning;
         }
         public override string OutputTree(Token Er, int priority = 0) {
-            return "asd2123";
+            return Convert.ToString(token.meaning);
         }
     }
     class BinOpNode : Node

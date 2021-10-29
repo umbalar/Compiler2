@@ -7,6 +7,7 @@ namespace Compiler
     {
         public void LexerAutoTest()
         {
+            int correctResults = 0;
             for (int i = 1; i <= Directory.GetFiles("LexerTests/").Length; i++)
             {
                 string lexerExpectation;
@@ -14,19 +15,20 @@ namespace Compiler
                 Console.WriteLine(fileName);
                 Lexer testLexer = new Lexer(fileName);
                 Token testToken = testLexer.GetNextToken();
-                string lexerOut = "lN=" + testToken.lineNumber + "   cN=" + testToken.charNumber + "    lT=" + testToken.lexType + "    sC=" + testToken.sourceCode + "     m=" + testToken.meaning;
-                Console.WriteLine(lexerOut);
-                while (testToken.lexType != "end_of_file")
+                string lexerOut = $"lN={testToken.lineNumber}\tcN={ testToken.charNumber}\tlT={testToken.lexType}\tsC={testToken.sourceCode}\tm={testToken.meaning}";
+                //Console.WriteLine(lexerOut);
+                while (testToken.lexType != Lexer.Type_lex.end_of_file)
                 {
                     testToken = testLexer.GetNextToken();
-                    string lexema = "lN=" + testToken.lineNumber + "   cN=" + testToken.charNumber + "    lT=" + testToken.lexType + "    sC=" + testToken.sourceCode + "     m=" + testToken.meaning;
-                    lexerOut += lexema;
-                    Console.WriteLine(lexema);
+                    string lexema = $"lN={testToken.lineNumber}\tcN={ testToken.charNumber}\tlT={testToken.lexType}\tsC={testToken.sourceCode}\tm={testToken.meaning}";
+                    lexerOut += "\n" + lexema;
+                    //Console.WriteLine(lexema);
                 }
-                using (StreamWriter sw = new StreamWriter("LexerTestsExpectations/" + i + ".txt"))
-                {
-                    sw.Write(lexerOut);
-                }
+
+                //using (StreamWriter sw = new StreamWriter("LexerTestsExpectations/" + i + ".txt"))
+                //{
+                //    sw.Write(lexerOut);
+                //}
 
                 using (StreamReader sr = new StreamReader("LexerTestsExpectations/" + i + ".txt"))
                 {
@@ -35,13 +37,14 @@ namespace Compiler
                 if (lexerOut.Equals(lexerExpectation))
                 {
                     Console.WriteLine("correct result\n");
+                    correctResults++;
                 }
                 else
                 {
                     Console.WriteLine("wrong result\n");
                 }
-
             }
+            Console.WriteLine($"correct results = {correctResults}\twrong results = {Directory.GetFiles("LexerTests/").Length - correctResults}\n");
         }
         public void LexerManualTest()
         {
@@ -53,26 +56,27 @@ namespace Compiler
             }
             Lexer testLexer1 = new Lexer(fileName1);
             Token testToken1 = testLexer1.GetNextToken();
-            string lexerOut1 = "lN=" + testToken1.lineNumber + "   cN=" + testToken1.charNumber + "    lT=" + testToken1.lexType + "    sC=" + testToken1.sourceCode + "     m=" + testToken1.meaning;
+            string lexerOut1 = $"lN={testToken1.lineNumber}\tcN={ testToken1.charNumber}\tlT={testToken1.lexType}\tsC={testToken1.sourceCode}\tm={testToken1.meaning}";
             Console.WriteLine(lexerOut1);
-            while (testToken1.lexType != "end_of_file")
+            while (testToken1.lexType != Lexer.Type_lex.end_of_file)
             {
                 testToken1 = testLexer1.GetNextToken();
-                string lexema = "lN=" + testToken1.lineNumber + "   cN=" + testToken1.charNumber + "    lT=" + testToken1.lexType + "    sC=" + testToken1.sourceCode + "     m=" + testToken1.meaning;
+                string lexema = $"lN={testToken1.lineNumber}\tcN={ testToken1.charNumber}\tlT={testToken1.lexType}\tsC={testToken1.sourceCode}\tm={testToken1.meaning}";
                 lexerOut1 += lexema;
                 Console.WriteLine(lexema);
             }
         }
         public void ParserAutoTest()
         {
+            int correctResults = 0;
             for (int i = 1; i <= Directory.GetFiles("ParserTests/").Length; i++)
             {
-
                 string ParserExpectation;
                 string fileName = "ParserTests/" + i + ".txt";
                 Console.WriteLine(fileName);
                 Parser testParser = new Parser(new Lexer(fileName));
                 string parserOut = testParser.GetTree();
+
                 //Console.WriteLine(parserOut);
                 //using (StreamWriter sw = new StreamWriter("ParserTestsExpectations/" + i + ".txt"))
                 //{
@@ -86,13 +90,14 @@ namespace Compiler
                 if (parserOut.Equals(ParserExpectation))
                 {
                     Console.WriteLine("correct result\n");
+                    correctResults++;
                 }
                 else
                 {
                     Console.WriteLine("wrong result\n");
                 }
-
             }
+            Console.WriteLine($"correct results = {correctResults}\twrong results = {Directory.GetFiles("ParserTests/").Length - correctResults}\n");
         }
         public void ParserManualTest()
         {

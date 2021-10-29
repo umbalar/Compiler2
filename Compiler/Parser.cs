@@ -6,7 +6,7 @@ namespace Compiler
     {
         private Lexer lexer;
         private Token currentToken;
-        private Token Er;
+        private Token err;
 
         private enum Type_lex
         {
@@ -27,7 +27,10 @@ namespace Compiler
         {
             Lexer = lexer;
             currentToken = Lexer.GetNextToken();
-            tree = ParseExpression().OutputTree(Er);
+            if (currentToken.lexType != Lexer.Type_lex.end_of_file)
+            {
+                tree = ParseExpression().OutputTree(err);
+            }
         }
 
         public string GetTree()
@@ -36,22 +39,13 @@ namespace Compiler
         }
 
         private bool IsOperation(string str)
-        {
-            if ((str == "+") || (str == "-") || (str == "*") || (str == "/"))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            } 
-        }
+            => str == "+" || str == "-" || str == "*" || str == "/";
 
         private void OutputER(Token token)
         {
-            Er = new Token(token.lineNumber, token.charNumber, "Syntax error", "Expected Identificator or Number", "");
+            err = new Token(token.lineNumber, token.charNumber, Lexer.Type_lex.err, "Expected Identificator or Number", "");
         }
-        private BinOpNode ParseExpression()
+        private Node ParseExpression()
         {
             dynamic left = ParseTerm();
             Token operation = currentToken;
@@ -65,10 +59,10 @@ namespace Compiler
 
                 operation = currentToken;
             }
-            if (Convert.ToString(left.GetType()).Contains("BinOpNode"))
+            if (Convert.ToString(left.GetType()).Contains("BinOpNode") || Convert.ToString(left.GetType()).Contains("NumNode"))
             {
                 return left;
-            } 
+            }
             else
             {
                 OutputER(operation);
@@ -98,7 +92,7 @@ namespace Compiler
         {
             Token token = currentToken;
             currentToken = Lexer.GetNextToken();
-            if (Enum.TryParse(typeof(Type_lex), token.lexType, out object _))
+            if (token.lexType == Lexer.Type_lex.integer_literal_int || token.lexType == Lexer.Type_lex.real_literal_double)
             {
                 return new NumNode(token);
             } 
@@ -111,7 +105,7 @@ namespace Compiler
 
                 if (Convert.ToString(token.meaning) != ")")
                 {
-                    Er = new Token(token.lineNumber, token.charNumber + token.sourceCode.Length, "Syntax Error", "Expected \")\"", "");
+                    err = new Token(token.lineNumber, token.charNumber + token.sourceCode.Length, Lexer.Type_lex.err, "Expected \")\"", "");
                 }
                 return left;
             }

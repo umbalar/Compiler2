@@ -16,10 +16,9 @@ namespace Compiler
 
         };
 
-        private enum Type_lex
+        public enum Type_lex
         {
-            key_word, identifier, integer_literal_int, integer_literal_uint, integer_literal_long, integer_literal_ulong,
-            real_literal_double, real_literal_float, real_literal_decimal, char_literal, string_literal, delimiter, Operator, end_of_file
+            key_word, identifier, integer_literal_int, err, real_literal_double, char_literal, string_literal, delimiter, Operator, end_of_file
         };
 
         private static string[] control_sequence = { "\\\'", "\\\"", "\\\\", "\\0", "\\a", "\\b", "\\f", "\\n", "\\r", "\\t", "\\v"};
@@ -33,9 +32,9 @@ namespace Compiler
         private string buffer = "";
         char currentChar;
 
-        private int NumOfString = 1;
-        private int NumOfColumn = 1;
-        Token CurrentToken;
+        private int numOfString = 1;
+        private int numOfColumn = 1;
+        Token currentToken;
         public void Analysis()
         {
             switch (state)
@@ -45,21 +44,21 @@ namespace Compiler
                     {
                         if (sr.Peek() == -1)
                         {
-                            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length, nameof(Type_lex.end_of_file), "", "EndOfFile");
+                            currentToken = new Token(numOfString, ColumnNumberCalc(), Type_lex.end_of_file, "", "EndOfFile");
                             break;
                         }
                         else
                         {
                             buffer += (char)sr.Read();
-                            NumOfColumn++;
+                            numOfColumn++;
                         }
                     }
                     if (Array.IndexOf(insign, buffer[0]) != -1)
                     {
                         if (buffer[0] == '\n')
                         {
-                            NumOfColumn = 1;
-                            NumOfString++;
+                            numOfColumn = 1;
+                            numOfString++;
                         }
                         buffer = "";
                         Analysis();
@@ -91,15 +90,9 @@ namespace Compiler
                     }
                     else if (Array.IndexOf(delimiter, buffer[0]) != -1)
                     {
-                        CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length, nameof(Type_lex.delimiter), buffer, buffer);
+                        currentToken = new Token(numOfString, ColumnNumberCalc(), Type_lex.delimiter, buffer, buffer);
                         buffer = "";
                     }
-                    else if (buffer[0] == '-')
-                    {
-                        state = States.NUM;
-                        Analysis();
-                    }
-
                     else if (Array.IndexOf(operators, buffer) != -1)
                     {
                         state = States.OP;
@@ -116,10 +109,10 @@ namespace Compiler
                     if (sr.Peek() != -1)
                     {
                         currentChar = (char)sr.Read();
-                        NumOfColumn++;
+                        numOfColumn++;
                         if ((Array.IndexOf(insign, currentChar) != -1) || (Array.IndexOf(delimiter, currentChar) != -1) || (Array.IndexOf(operators, currentChar.ToString()) != -1))
                         {
-                            CurrentToken = KWorIdentToken(buffer, false);
+                            currentToken = KWorIdentToken(buffer, false);
                             state = States.S;
                             buffer = "";
                             if (Array.IndexOf(delimiter, currentChar) != -1 || (Array.IndexOf(operators, currentChar.ToString()) != -1))
@@ -140,7 +133,7 @@ namespace Compiler
                     }
                     else
                     {
-                        CurrentToken = KWorIdentToken(buffer, true);
+                        currentToken = KWorIdentToken(buffer, true);
                         buffer = "";
                         state = States.S;
                     }
@@ -149,7 +142,7 @@ namespace Compiler
                     if (sr.Peek() != -1)
                     {
                         currentChar = (char)sr.Read();
-                        NumOfColumn++;
+                        numOfColumn++;
                         
                         if (currentChar == '.')
                         {
@@ -159,29 +152,14 @@ namespace Compiler
                         }
                         else if ((Array.IndexOf(insign, currentChar) != -1) || (Array.IndexOf(delimiter, currentChar) != -1) || (Array.IndexOf(operators, currentChar.ToString()) != -1))
                         {
-                            if ((Array.IndexOf(operators, currentChar.ToString()) != -1) && (buffer == "-"))
+                            currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.integer_literal_int, buffer, Int32.Parse(buffer.Replace("_", "")));
+                            state = States.S;
+                            buffer = "";
+                            if (Array.IndexOf(delimiter, currentChar) != -1 || (Array.IndexOf(operators, currentChar.ToString()) != -1))
                             {
-                                buffer += currentChar;
-                                state = States.OP;
-                                Analysis();
-                            }
-                            else if (((Array.IndexOf(insign, currentChar) != -1) || (Array.IndexOf(delimiter, currentChar) != -1)) && (buffer == "-"))
-                            {
-                                CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.Operator), buffer, buffer);
-                                state = States.S;
                                 buffer = "" + currentChar;
                             }
-                            else
-                            {
-                                CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.integer_literal_int), buffer, Int32.Parse(buffer.Replace("_", "")));
-                                state = States.S;
-                                buffer = "";
-                                if (Array.IndexOf(delimiter, currentChar) != -1 || (Array.IndexOf(operators, currentChar.ToString()) != -1))
-                                {
-                                    buffer = "" + currentChar;
-                                }
-                            }
-                            
+
                         }
                         else if (Char.IsDigit(currentChar) || currentChar == '_')
                         {
@@ -199,13 +177,13 @@ namespace Compiler
                     {
                         if (buffer == "-")
                         {
-                            CurrentToken = new Token(NumOfString, NumOfColumn - 1, nameof(Type_lex.Operator), buffer, buffer);
+                            currentToken = new Token(numOfString, numOfColumn - 1, Type_lex.Operator, buffer, buffer);
                             buffer = "";
                             state = States.S;
                         }
                         else
                         {
-                            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length, nameof(Type_lex.integer_literal_int), buffer, Int32.Parse(buffer.Replace("_", "")));
+                            currentToken = new Token(numOfString, ColumnNumberCalc(), Type_lex.integer_literal_int, buffer, Int32.Parse(buffer.Replace("_", "")));
                             buffer = "";
                             state = States.S;
                         }
@@ -215,7 +193,7 @@ namespace Compiler
                     if (sr.Peek() != -1)
                     {
                         currentChar = (char)sr.Read();
-                        NumOfColumn++;
+                        numOfColumn++;
                         if ((Array.IndexOf(insign, currentChar) != -1) || (Array.IndexOf(delimiter, currentChar) != -1) || (Array.IndexOf(operators, currentChar.ToString()) != -1))
                         {
                             if ((Array.IndexOf(operators, currentChar.ToString()) != -1) && (buffer == "-"))
@@ -232,7 +210,7 @@ namespace Compiler
                                 }
                                 else
                                 {
-                                    CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.real_literal_double), buffer, double.Parse(buffer.Replace('.', ',').Replace("_", "")));
+                                    currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.real_literal_double, buffer, double.Parse(buffer.Replace('.', ',').Replace("_", "")));
                                     state = States.S;
                                     buffer = "";
                                 }
@@ -249,7 +227,7 @@ namespace Compiler
                         }
                         else if (currentChar == 'd' || currentChar == 'D')
                         {
-                            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.real_literal_double), buffer + currentChar, double.Parse(buffer.Replace('.', ',').Replace("_", "")));
+                            currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.real_literal_double, buffer + currentChar, double.Parse(buffer.Replace('.', ',').Replace("_", "")));
                             state = States.S;
                             buffer = "";
                         }
@@ -272,13 +250,13 @@ namespace Compiler
                     {
                         if (buffer == ".")
                         {
-                            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.delimiter), buffer, buffer);
+                            currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.delimiter, buffer, buffer);
                             buffer = "";
                             state = States.S;
                         }
                         else
                         {
-                            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length, nameof(Type_lex.real_literal_double), buffer, double.Parse(buffer.Replace('.', ',').Replace("_", "")));
+                            currentToken = new Token(numOfString, ColumnNumberCalc(), Type_lex.real_literal_double, buffer, double.Parse(buffer.Replace('.', ',').Replace("_", "")));
                             buffer = "";
                             state = States.S;
                         }
@@ -288,10 +266,10 @@ namespace Compiler
                     if (sr.Peek() != -1)
                     {
                         currentChar = (char)sr.Read();
-                        NumOfColumn++;
+                        numOfColumn++;
                         if (Array.IndexOf(operators, currentChar.ToString()) == -1)
                         {
-                            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.Operator), buffer, buffer);
+                            currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.Operator, buffer, buffer);
                             state = States.S;
                             buffer = "" + currentChar;
                         }
@@ -302,14 +280,14 @@ namespace Compiler
                         }
                         else
                         {
-                            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.Operator), buffer, buffer);
+                            currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.Operator, buffer, buffer);
                             buffer = "" + currentChar;
                             state = States.S;
                         }
                     }
                     else
                     {
-                        CurrentToken = new Token(NumOfString, NumOfColumn, nameof(Type_lex.Operator), buffer, buffer);
+                        currentToken = new Token(numOfString, numOfColumn, Type_lex.Operator, buffer, buffer);
                         buffer = "";
                         state = States.S;
                     }
@@ -318,7 +296,7 @@ namespace Compiler
                     if (sr.Peek() != -1)
                     {
                         currentChar = (char)sr.Read();
-                        NumOfColumn++;
+                        numOfColumn++;
                         if (currentChar == '\'')
                         {
                             buffer += currentChar;
@@ -332,11 +310,11 @@ namespace Compiler
                             }
                             if (chMeaning.Length != 3)
                             {
-                                CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length, "Error", buffer, "");
+                                currentToken = new Token(numOfString, ColumnNumberCalc(), Type_lex.err, buffer, "");
                             }
                             else
                             {
-                                CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length, nameof(Type_lex.char_literal), buffer, char.Parse(chMeaning.Trim('\'')));
+                                currentToken = new Token(numOfString, ColumnNumberCalc(), Type_lex.char_literal, buffer, char.Parse(chMeaning.Trim('\'')));
                             }
                             state = States.S;
                             buffer = "";
@@ -357,7 +335,7 @@ namespace Compiler
                     if (sr.Peek() != -1)
                     {
                         currentChar = (char)sr.Read();
-                        NumOfColumn++;
+                        numOfColumn++;
                         if (currentChar == '\"')
                         {
                             buffer += currentChar;
@@ -369,7 +347,7 @@ namespace Compiler
                                     strMeaning = buffer.Replace(control_sequence[i], control_sequence_value[i]);
                                 }
                             }
-                            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length, nameof(Type_lex.string_literal), buffer, strMeaning.Trim('\"'));
+                            currentToken = new Token(numOfString, ColumnNumberCalc(), Type_lex.string_literal, buffer, strMeaning.Trim('\"'));
                             state = States.S;
                             buffer = "";
                         }
@@ -389,10 +367,10 @@ namespace Compiler
                     if (sr.Peek() != -1)
                     {
                         currentChar = (char)sr.Read();
-                        NumOfColumn++;
+                        numOfColumn++;
                         if ((Array.IndexOf(insign, currentChar) != -1) || (Array.IndexOf(delimiter, currentChar) != -1) || (Array.IndexOf(operators, currentChar.ToString()) != -1))
                         {
-                            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, "Error", buffer, "");
+                            currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.err, buffer, "");
                             state = States.S;
                             buffer = "";
                             if (Array.IndexOf(delimiter, currentChar) != -1 || (Array.IndexOf(operators, currentChar.ToString()) != -1))
@@ -408,7 +386,7 @@ namespace Compiler
                     }
                     else
                     {
-                        CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, "Error", buffer, "");
+                        currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.err, buffer, "");
                         buffer = "";
                         state = States.S;
                     }
@@ -416,15 +394,17 @@ namespace Compiler
             }
         }
 
+        public int ColumnNumberCalc()
+            => numOfColumn - buffer.Length;
         public void dotActions()
         {
-            CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.delimiter), buffer, buffer);
+            currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.delimiter, buffer, buffer);
             buffer = "";
             state = States.S;
         }
         private Token KWorIdentToken(string buffer, bool eof)
         {
-            Token CurrentToken;
+            Token currentToken;
             bool srch = false;
             foreach (Key_words key_word in Enum.GetValues(typeof(Key_words)))
             {
@@ -437,26 +417,26 @@ namespace Compiler
             {
                 if (eof)
                 {
-                    CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length, nameof(Type_lex.key_word), buffer, "KWName");
+                    currentToken = new Token(numOfString, ColumnNumberCalc(), Type_lex.key_word, buffer, "KWName");
                 }
                 else
                 {
-                    CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.key_word), buffer, "KWName");
+                    currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.key_word, buffer, "KWName");
                 }
             }
             else
             {
                 if (eof)
                 {
-                    CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length, nameof(Type_lex.identifier), buffer, "IDName");
+                    currentToken = new Token(numOfString, ColumnNumberCalc(), Type_lex.identifier, buffer, "IDName");
                 }
                 else
                 {
-                    CurrentToken = new Token(NumOfString, NumOfColumn - buffer.Length - 1, nameof(Type_lex.identifier), buffer, "IDName");
+                    currentToken = new Token(numOfString, ColumnNumberCalc() - 1, Type_lex.identifier, buffer, "IDName");
                 }
                 
             }
-            return CurrentToken;
+            return currentToken;
         }
         public Token GetNextToken()
         {
@@ -468,9 +448,7 @@ namespace Compiler
             Analysis();
         }
         public Token GetToken()
-        {
-            return CurrentToken;
-        }
+            => currentToken;
         public Lexer(string iF)
         {
             sr = new StreamReader(iF);
