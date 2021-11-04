@@ -24,3 +24,16 @@ C:\Users\Alzaar\Desktop\Учеба\Компилятор\Compiler2\Compiler2\Comp
 C:\Users\Alzaar\Desktop\Учеба\Компилятор\Compiler2\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.dll
 C:\Users\Alzaar\Desktop\Учеба\Компилятор\Compiler2\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.pdb
 C:\Users\Alzaar\Desktop\Учеба\Компилятор\Compiler2\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.genruntimeconfig.cache
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\bin\Debug\netcoreapp3.1\Compiler.exe
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\bin\Debug\netcoreapp3.1\Compiler.deps.json
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\bin\Debug\netcoreapp3.1\Compiler.runtimeconfig.json
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\bin\Debug\netcoreapp3.1\Compiler.runtimeconfig.dev.json
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\bin\Debug\netcoreapp3.1\Compiler.dll
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\bin\Debug\netcoreapp3.1\Compiler.pdb
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.csprojAssemblyReference.cache
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.AssemblyInfoInputs.cache
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.AssemblyInfo.cs
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.csproj.CoreCompileInputs.cache
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.dll
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.pdb
+C:\Users\Alzaar\Documents\GitHub\Compiler2\Compiler\obj\Debug\netcoreapp3.1\Compiler.genruntimeconfig.cache
